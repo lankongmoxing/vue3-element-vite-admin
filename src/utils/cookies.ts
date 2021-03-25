@@ -42,8 +42,10 @@ export const getEmptyRole = () => {
   }
 };
 export const setToken = (token: string) => Cookies.set(tokenKey, token);
-export const setMenuList = (list: string) =>
+
+export const setMenuList = (list: []) => {
   localStorage.setItem("mkyy_auth_menu", JSON.stringify(list));
+}
 export const setEmptyRole = (params: string) =>
   localStorage.setItem("empty_role", params);
 export const removeEmptyRole = () => localStorage.removeItem("empty_role");

@@ -73,39 +73,39 @@ const mutations = {
 
 const actions = {
   addView(context: any, view: any) {
-    context('ADD_VISITED_VIEW', view)
-    context('ADD_CACHED_VIEW', view)
+    context.commit('ADD_VISITED_VIEW', view)
+    context.commit('ADD_CACHED_VIEW', view)
   },
   
   addVisitedView(context: any, view: any) {
-    context('ADD_VISITED_VIEW', view)
+    context.commit('ADD_VISITED_VIEW', view)
   },
   
   delView(context: any, view: any) {
-    context('DEL_VISITED_VIEW', view)
-    context('DEL_CACHED_VIEW', view)
+    context.commit('DEL_VISITED_VIEW', view)
+    context.commit('DEL_CACHED_VIEW', view)
   },
   
   delCachedView(context: any, view: any) {
-    context('DEL_CACHED_VIEW', view)
+    context.commit('DEL_CACHED_VIEW', view)
   },
   
   delOthersViews(context: any, view: any) {
-    context('DEL_OTHERS_VISITED_VIEWS', view)
-    context('DEL_OTHERS_CACHED_VIEWS', view)
+    context.commit('DEL_OTHERS_VISITED_VIEWS', view)
+    context.commit('DEL_OTHERS_CACHED_VIEWS', view)
   },
   
   delAllViews(context: any, view: any) {
-    context('DEL_ALL_VISITED_VIEWS', view)
-    context('DEL_ALL_CACHED_VIEWS', view)
+    context.commit('DEL_ALL_VISITED_VIEWS', view)
+    context.commit('DEL_ALL_CACHED_VIEWS', view)
   },
   
   delAllCachedViews(context: any, view: any) {
-    context('DEL_ALL_CACHED_VIEWS', view)
+    context.commit('DEL_ALL_CACHED_VIEWS', view)
   },
   
   updateVisitedView(context: any, view: any) {
-    context('UPDATE_VISITED_VIEW', view)
+    context.commit('UPDATE_VISITED_VIEW', view)
   },
 };
 

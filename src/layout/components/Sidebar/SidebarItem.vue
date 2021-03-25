@@ -100,7 +100,6 @@ export default defineComponent({
             return true
           }
         })
-        console.log(showingChildren.length)
         return showingChildren.length
       }
       return 0

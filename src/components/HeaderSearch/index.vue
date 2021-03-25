@@ -46,7 +46,6 @@ export default defineComponent({
     const search = ref('')
 
     const change = (path: string[]) => {
-      console.log(path)
       if (path[0] === '/') {
         router.push('/index')
       } else {

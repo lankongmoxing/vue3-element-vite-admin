@@ -39,6 +39,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
 import Hamburger from '@/components/Hamburger/index.vue'
 import Screenfull from '@/components/Screenfull/index.vue'
 
@@ -49,6 +50,8 @@ export default defineComponent({
   },
   setup() {
     const store = useStore()
+    const route = useRoute()
+    const router = useRouter()
 
     const toggleSideBar = () => {
       store.dispatch('app/ToggleSideBar')
@@ -67,11 +70,19 @@ export default defineComponent({
       return store.state.app.device.toString()
     })
 
+    // 点击退出登录
+    const logout = async() => {
+      store.dispatch('tagsView/delAllViews')
+      await store.dispatch('user/LogOut')
+      router.push(`/login?redirect=${route.fullPath}`)
+    }
+
     return {
       toggleSideBar,
       sidebar,
       indexRoute,
-      device
+      device,
+      logout
     }
   }
 })
