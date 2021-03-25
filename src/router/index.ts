@@ -57,7 +57,8 @@ const constantRoutes = [
   handleRouter
 ];
 
-export { constantRoutes };
+const asyncRoutes: any = []
+export { constantRoutes, asyncRoutes };
 
 export default createRouter({
   // 指定路由的模式,此处使用的是hash模式

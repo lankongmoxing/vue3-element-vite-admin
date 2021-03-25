@@ -6,7 +6,8 @@
 
 1. svg-icon
 2. layout
-3. login页面
+3. login/loginout
+4. mock
 
 ## 运行打包
 

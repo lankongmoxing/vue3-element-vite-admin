@@ -25,6 +25,13 @@ export default defineComponent({
   }
 })
 </script>
+<style lang="scss">
+.app-main {
+  .el-table {
+    box-shadow: 4px 4px 20px rgba(0,0,0,.05);
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 .app-main {

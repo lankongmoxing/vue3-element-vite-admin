@@ -10,7 +10,7 @@ type KeyValueType = {
 const state = {
   theme: '', // 主题色
   showSidebarLogo: true, // 是否展示logo
-  fixedHeader: true, // 是否固定 header
+  fixedHeader: false, // 是否固定 header
   sidebarTextTheme: false, // sidebar 字体主题是否使用
  };
  

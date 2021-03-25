@@ -27,7 +27,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, computed } from "vue";
-import { Sidebar, Navbar, AppMain } from "./components";
+import { Sidebar, Navbar, AppMain, TagsView } from "./components";
 import { useStore } from "vuex";
 
 export default defineComponent({
@@ -36,6 +36,7 @@ export default defineComponent({
     Sidebar,
     Navbar,
     AppMain,
+    TagsView
   },
   setup() {
     const store = useStore();

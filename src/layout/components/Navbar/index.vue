@@ -8,6 +8,9 @@
     />
 
     <div class="right-menu">
+      <template v-if="device !== 'mobile'">
+        <screenfull class="right-menu-item hover-effect" />
+      </template>
       <el-dropdown
         class="avatar-container right-menu-item hover-effect"
         trigger="click"
@@ -37,26 +40,38 @@
 import { computed, defineComponent, ref } from 'vue'
 import { useStore } from 'vuex'
 import Hamburger from '@/components/Hamburger/index.vue'
+import Screenfull from '@/components/Screenfull/index.vue'
 
 export default defineComponent({
   components: {
-    Hamburger
+    Hamburger,
+    Screenfull
   },
   setup() {
     const store = useStore()
+
     const toggleSideBar = () => {
       store.dispatch('app/ToggleSideBar')
     }
+
+    // 侧边栏
     const sidebar = computed(() => {
       return store.state.app.sidebar
     })
 
     // 点击首页跳转
     const indexRoute = ref('')
+
+    // 设备信息
+    const device = computed(() => {
+      return store.state.app.device.toString()
+    })
+
     return {
       toggleSideBar,
       sidebar,
-      indexRoute
+      indexRoute,
+      device
     }
   }
 })
