@@ -19,7 +19,7 @@ service.interceptors.request.use(
     }
 
     // todo 需要处理 header 相关的信息
-    config.headers['Authorization'] = 'Bearer Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxIiwiZXhwIjoxNjE3ODQ3NzM5fQ.nR6JziB3VUlBebKG5MNkgsryGltGnWWg5n5MjBr9rULXS8R6T4VknfE_QqRUFIh_2FprdnjRjPQa_bGYxyfTCQ'
+    config.headers['Authorization'] = ''
     return config
   },
   error => {
