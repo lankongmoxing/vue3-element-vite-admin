@@ -31,7 +31,7 @@
     </template>
 
     <el-submenu v-else :index="resolvePath(item.path)" popper-append-to-body>
-      <template>
+      <template #title>
         <svg-icon v-if="item.meta && item.meta.icon" :name="item.meta.icon" />
         <span v-if="item.meta && item.meta.title">{{ item.meta.title }}</span>
       </template>
@@ -91,19 +91,22 @@ export default defineComponent({
     const item: any = toRefs(props).item
 
     const showingChildNumber = () => {
-      if (item.children) {
-        const showingChildren = item.children.filter((item: any) => {
+      const itemValue = item.value
+      if (itemValue.children) {
+        const showingChildren = itemValue.children.filter((item: any) => {
           if (item.meta && item.meta.hidden) {
             return false
           } else {
             return true
           }
         })
+        console.log(showingChildren.length)
         return showingChildren.length
       }
       return 0
     }
 
+    // 返回路由的索引
     const resolvePath = (routePath: string) => {
       if (isExternal(routePath)) {
         return routePath
@@ -112,12 +115,20 @@ export default defineComponent({
       if (isExternal(basePathValue)) {
         return basePathValue
       }
-      // return path.resolve(JSON.parse(JSON.stringify(basePath)), routePath)
-      return basePathValue
+
+      let path = ''
+      if (basePathValue === '/') {
+        path = basePathValue + routePath
+      } else {
+        path = basePathValue + '/' + routePath
+      }
+      return path
     }
 
     const theOnlyOneChild = computed(() => {
       const itemValue = item.value
+
+      // 只要展示的 children 大于1，返回null，表示能展示的子菜单数量大于1
       if (showingChildNumber() > 1) {
         return null
       }

@@ -1,72 +1,93 @@
 <template>
   <div class="app-wrapper" :class="classObj">
-    <!-- <div
+    <div
+      v-if="classObj.mobile && sidebar.opened"
       class="drawer-bg"
       @click="handleClickOutside"
-    /> -->
+    />
+
     <!-- 侧边栏 -->
     <sidebar class="sidebar-container" />
 
     <!-- 顶部header + main -->
     <div class="main-container" :class="{ hasTagsView: showTagsView }">
       <!-- 顶部 -->
-      <div :class="{'fixed-header': fixedHeader}">
+      <div :class="{ 'fixed-header': fixedHeader }">
+        <!-- 导航 -->
         <navbar />
+
+        <!-- 快捷标签 -->
         <tags-view v-if="showTagsView" />
       </div>
 
+      <!-- 页面内容 -->
       <appMain />
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
-import { Sidebar, Navbar, AppMain } from './components'
-import { useStore } from 'vuex'
+import { defineComponent, computed } from "vue";
+import { Sidebar, Navbar, AppMain } from "./components";
+import { useStore } from "vuex";
 
 export default defineComponent({
+  name: "Layout",
   components: {
     Sidebar,
     Navbar,
-    AppMain
+    AppMain,
   },
   setup() {
+    const store = useStore();
+
+    // 隐藏
     const handleClickOutside = () => {
-      console.log(666)
+      store.dispatch("app/CloseSideBar", false);
+    };
+
+    // 获取 sidebar的配置
+    const sidebar = computed(() => {
+      return store.state.app.sidebar;
+    });
+
+    const device = computed(() => {
+      return store.state.app.device;
+    });
+
+    enum DeviceType {
+      Mobile,
+      Desktop,
     }
 
-    const store = useStore()
-
-    const sidebar: any = computed(() => {
-      return store.state.app.sidebar
-    })
-
+    // 整个布局的class
     const classObj = computed(() => {
       return {
-        hideSidebar: !sidebar.value.opened,
-        openSidebar: sidebar.value.opened,
-        withoutAnimation: sidebar.value.withoutAnimation
-        // mobile: this.device === DeviceType.Mobile
-      }
-    })
+        hideSidebar: !sidebar.value.opened, // 隐藏侧边栏
+        openSidebar: sidebar.value.opened, // 打开侧边栏
+        withoutAnimation: sidebar.value.withoutAnimation, // 无动效
+        mobile: device.value === DeviceType.Mobile, // 是否手机
+      };
+    });
 
-    const showTagsView = () => {
-      return store.state.app.showTagsView
-    }
+    // 是否展示 tagsView
+    const showTagsView = computed(() => {
+      return store.state.app.showTagsView;
+    });
 
-    const fixedHeader = () => {
-      return store.state.settings.fixedHeader
-    }
+    // 是否固定 header
+    const fixedHeader = computed(() => {
+      return store.state.settings.fixedHeader;
+    });
 
     return {
       handleClickOutside,
       classObj,
       sidebar,
       showTagsView,
-      fixedHeader
-    }
-  }
-})
+      fixedHeader,
+    };
+  },
+});
 </script>
 
 <style lang="scss" scoped>

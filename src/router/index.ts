@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from "vue-router";
+import handleRouter from './modules/handle';
 const layout = () => import("@/layout/index.vue");
 // 在 Vue-router新版本中，需要使用createRouter来创建路由
 
@@ -53,6 +54,7 @@ const constantRoutes = [
       },
     ],
   },
+  handleRouter
 ];
 
 export { constantRoutes };

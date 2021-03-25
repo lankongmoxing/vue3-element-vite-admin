@@ -1,3 +1,4 @@
+import { setSidebarStatus } from '@/utils/Cookies';
 
 const state = {
   sidebar: { // 侧边栏控制
@@ -8,20 +9,22 @@ const state = {
 };
 
 const mutations = {
-  TEST: () => {
-    console.log('test')
-  },
   TOGGLE_SIDEBAR: (state: any) => {
     state.sidebar.opened = !state.sidebar.opened
+  },
+  CLOSE_SIDEBAR: (state: any, withoutAnimation: boolean) => {
+    state.sidebar.opened = false
+    state.sidebar.withoutAnimation = withoutAnimation
+    setSidebarStatus('closed')
   }
 };
 
 const actions = {
-  test() {
-    console.log('test')
-  },
   ToggleSideBar(context: any) {
     context.commit('TOGGLE_SIDEBAR')
+  },
+  CloseSideBar(context: any, withoutAnimation: boolean) {
+    context.commit('CLOSE_SIDEBAR', withoutAnimation)
   }
 };
 

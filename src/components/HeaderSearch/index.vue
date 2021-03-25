@@ -3,47 +3,68 @@
     id="header-search"
     class="header-search show"
   >
-    <el-select
+    <el-cascader
       ref="headerSearchSelect"
       v-model="search"
-      :remote-method="querySearch"
       filterable
-      default-first-option
-      remote
       placeholder="搜索"
       class="header-search-select"
+      :options="options"
       @change="change"
-    >
-      <el-option
-        v-for="item in options"
-        :key="item.path"
-        :value="item"
-        :label="item.title.join(' > ')"
-      />
-    </el-select>
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   setup() {
-    const options: any = []
-    const change = () => {
+    const store = useStore()
+    const router = useRouter()
 
-    }
+    const routes = store.state.permission.routes
+    // 过滤
+    const canRouters: any = []
+
+    routes.map((v: any) => {
+      if (!v.hidden) {
+        v.label = v.meta.title
+        v.value = v.path
+        v.children.map((cv: any) => {
+          cv.label = cv.meta.title
+          cv.value = cv.path
+        })
+        canRouters.push(v)
+      }
+    })
+
+    const options: any = canRouters
 
     const search = ref('')
-    const querySearch = () => {
 
+    const change = (path: string[]) => {
+      console.log(path)
+      if (path[0] === '/') {
+        router.push('/index')
+      } else {
+        router.push(path.join('/'))
+      }
+    }
+
+    const props = {
+      expandTrigger: 'hover',
+      value: 'path',
+      label: 'meta.title'
     }
 
     return {
-      change,
-      querySearch,
       options,
-      search
+      search,
+      change,
+      props
     }
   }
 })
@@ -53,7 +74,8 @@ export default defineComponent({
 .header-search {
   font-size: 0 !important;
   background: #fff;
-
+  padding-left: 10px;
+  padding-right: 10px;
   .search-icon {
     cursor: pointer;
     font-size: 18px;

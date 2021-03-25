@@ -4,6 +4,7 @@
     :class="{'collapse': collapse}"
   >
     <transition name="sidebarLogoFade">
+      <!-- sidebar 关闭的情况下只显示图片 -->
       <div
         v-if="collapse"
         key="collapse"
@@ -36,13 +37,13 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   props: {
-    collapse: {
+    collapse: { // sidebar 是否关闭
       type: Boolean,
       default: true
     }
   },
   setup() {
-    const title = '运营后台'
+    const title: string = '运营后台' // logo 的标题
 
     return {
       title

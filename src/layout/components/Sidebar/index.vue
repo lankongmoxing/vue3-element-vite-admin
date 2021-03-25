@@ -1,14 +1,19 @@
 <template>
   <div :class="{'has-logo': showLogo}">
+    <!-- 顶部的 logo -->
     <sidebar-logo
       v-if="showLogo"
       :collapse="isCollapse"
     />
+
+    <!-- 搜索菜单 -->
     <SearchBar
       v-if="!isCollapse"
       id="header-search"
       class="right-menu-item"
     />
+
+    <!-- 菜单列表，根据路由生成 -->
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         :default-active="activeMenu"
@@ -38,6 +43,7 @@ import SidebarLogo from './SidebarLogo.vue'
 import { defineComponent, computed } from 'vue'
 import SidebarItem from './SidebarItem.vue'
 import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 import SearchBar from '@/components/HeaderSearch/index.vue'
 
 export default defineComponent({
@@ -47,19 +53,33 @@ export default defineComponent({
     SearchBar
   },
   setup() {
+    const store = useStore()
+    const route = useRoute()
+
+    // 是否展示顶部 logo
     const showLogo = computed(() => {
-      return store.state.setting.showSidebarLogo
+      return store.state.settings.showSidebarLogo
     })
 
     const variables: any = variablesScss
 
-    const store = useStore()
+    // sidebar 是否关闭
     const isCollapse = computed(() => {
       return !store.state.app.sidebar.opened
     })
 
-    const activeMenu = ''
-    const menuActiveTextColor = ''
+    // 获取当前路由path
+    const activeMenu = computed(() => {
+      return route.path
+    })
+
+    // 菜单活跃状态下的文字颜色
+    const menuActiveTextColor = computed(() => {
+      if (store.state.settings.sidebarTextTheme) {
+        return store.state.settings.theme
+      }
+      return variables.menuActiveText
+    })
 
     // 当前账号有用的路由
     const routes: any = computed(() => {
