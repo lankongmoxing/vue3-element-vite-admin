@@ -1,16 +1,12 @@
 /**
- * main.ts中加载，
+ * main.ts中加载
  */
+
 import { getMenuListAPI } from "@/api/user";
 import router from "@/router/index";
 import store from "@/store/index";
 import userVuex from "@/store/modules/user";
-import {
-  getEmptyRole,
-  getMenuList,
-  setEmptyRole,
-  setMenuList
-} from "@/utils/cookies";
+import { getMenuList, setMenuList } from "@/utils/cookies";
 import { ElMessage } from "element-plus";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
@@ -24,22 +20,17 @@ router.beforeEach(async (to, from, next) => {
   NProgress.start();
 
   const token = userVuex.state.token;
+
   if (token) {
     if (to.path === "/login") {
-      // 如果是登录页面, 重定向到默认页面
-      next({ path: "/" });
-      NProgress.done();
+      next({ path: "/" }); // 如果是登录path, 重定向到默认页面
+      NProgress.done(); // 结束读条
     } else {
       // 获取菜单列表
       await getMenuListAPI()
         .then((res: any) => {
           // 保存菜单到
           setMenuList(res.data);
-          if (res.data.length > 0) {
-            setEmptyRole("");
-          } else {
-            setEmptyRole("empty_role");
-          }
         })
         .catch((error: any) => {
           console.log(error);
@@ -47,13 +38,11 @@ router.beforeEach(async (to, from, next) => {
 
       // 刷新重新获取数据 重新渲染权限菜单
       const menuList = getMenuList();
-      // 是否拥有角色 角色菜单为空
-      const emptyRole = getEmptyRole();
-      // emptyRole 拥有角色 角色菜单可以设置为空
-      // emptyRole 拥有角色 角色菜单可以设置为空
-      if ((menuList && menuList.length > 0) || emptyRole) {
+
+      if (menuList && menuList.length > 0) {
         // 有菜单 渲染权限菜单
-        if (store.state.permission.hasBuilded) {
+        const hasBuilded = store.state.permission.hasBuilded;
+        if (hasBuilded) {
           next();
         } else {
           try {
@@ -62,6 +51,7 @@ router.beforeEach(async (to, from, next) => {
               menuList
             );
 
+            // vue-router4 移除了批量添加，故遍历单独添加
             store.state.permission.dynamicRoutes.map((v: any) => {
               router.addRoute(v);
             });
@@ -73,24 +63,20 @@ router.beforeEach(async (to, from, next) => {
               next({ ...to, replace: true });
             }
           } catch (err) {
-            // Remove token and redirect to login page
-            store.dispatch("user/ResetToken");
-            ElMessage.error(err || "Has Error");
-            next(`/login?redirect=${to.path}`);
-            NProgress.done();
+            // 清除token,跳转登录
+            store.dispatch("user/ResetToken"); // 清除 token
+            ElMessage.error(err || "Has Error"); // 提示错误
+            next(`/login?redirect=${to.path}`); // 跳转登录
+            NProgress.done(); // 结束读条
           }
         }
       } else {
         // 无菜单 清除token 并且跳转登录
-        store.dispatch("user/ResetToken");
-        next(`/login?redirect=${to.path}`);
-        NProgress.done();
-        // 页面刷新无菜单时 跳转修改密码页面
-        // next({ path: '/' })
-        // NProgress.done()
+        store.dispatch("user/ResetToken"); // 清除 token
+        next(`/login?redirect=${to.path}`); // 跳转登录
+        NProgress.done(); // 结束读条
       }
     }
-    next();
   } else {
     // 没有 token
     if (whiteList.indexOf(to.path) !== -1) {
