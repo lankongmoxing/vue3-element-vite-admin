@@ -5,9 +5,19 @@
  */
 
 import { getCurrentName, getMenuList } from "@/utils/cookies";
+import { Mutation } from "vuex";
 import { asyncRoutes, constantRoutes } from "./../../router/index";
 
-const state = {
+interface stateType {
+  routes: any[];
+  addRoutes: [];
+  defaultRoute: string;
+  dynamicRoutes: any[];
+  menuRoutes: any[];
+  hasBuilded: Boolean;
+}
+
+const state: stateType = {
   routes: constantRoutes, // 路由列表
   addRoutes: [], // 添加的动态路由
   defaultRoute: "",
@@ -16,35 +26,47 @@ const state = {
   hasBuilded: <Boolean>false,
 };
 
-const mutations = {
-  SET_DEFAULTROUTES(state: any, val: string) {
+interface mutationsType {
+  SET_DEFAULTROUTES: Mutation<stateType>;
+  SET_ROUTES: Mutation<stateType>;
+  SET_MENU_ROUTES: Mutation<stateType>;
+  SET_HAS_BUILDED: Mutation<stateType>;
+}
+
+const mutations: mutationsType = {
+  SET_DEFAULTROUTES(state: stateType, val: string): void {
     state.defaultRoute = val;
   },
 
-  SET_ROUTES(state: any, routes: any[]) {
+  SET_ROUTES(state: stateType, routes: any[]): void {
     state.routes = constantRoutes.concat(routes);
     state.dynamicRoutes = routes;
   },
 
-  SET_MENU_ROUTES(state: any, routes: any[]) {
+  SET_MENU_ROUTES(state: stateType, routes: any[]): void {
     state.menuRoutes = routes;
   },
 
-  SET_HAS_BUILDED(val: Boolean) {
+  SET_HAS_BUILDED(state: stateType, val: Boolean): void {
     state.hasBuilded = val;
   },
 };
 
+interface contextType {
+  commit: Function;
+}
+
 const actions = {
-  saveMenuRoutes(context: any, routes: any[]) {
-    context("SET_MENU_ROUTES", routes);
+  // 保存菜单
+  saveMenuRoutes(context: contextType, routes: any[]) {
+    context.commit("SET_MENU_ROUTES", routes);
   },
 
-  removeBuildFlag() {
-    mutations.SET_HAS_BUILDED(false);
+  removeBuildFlag(context: contextType) {
+    context.commit("SET_HAS_BUILDED", false);
   },
 
-  CurrentIsAuths(context: any, routers: any) {
+  CurrentIsAuths(context: contextType, routers: any) {
     const currentMenuName = getCurrentName();
     let currentIsAuth = false;
     let status = false;
@@ -88,7 +110,7 @@ const actions = {
     }
   },
 
-  GenerateRoutes(content: any, routes: any) {
+  GenerateRoutes(context: contextType, routes: any) {
     let accessedRoutes: any;
     let defaultRoute: any;
     const constRoutes = JSON.parse(JSON.stringify(constantRoutes));
@@ -102,13 +124,13 @@ const actions = {
       } else {
         defaultRoute.redirect = routes[0].path;
       }
-      content("SET_DEFAULTROUTES", defaultRoute.redirect);
+      context.commit("SET_DEFAULTROUTES", defaultRoute.redirect);
     } else {
-      content("SET_DEFAULTROUTES", "");
+      context.commit("SET_DEFAULTROUTES", "");
     }
     accessedRoutes = filterAsyncRoutes(asyncRoutes, routes);
-    content("SET_ROUTES", accessedRoutes);
-    content("SET_HAS_BUILDED", true);
+    context.commit("SET_ROUTES", accessedRoutes);
+    context.commit("SET_HAS_BUILDED", true);
     return defaultRoute;
   },
 };

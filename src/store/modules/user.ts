@@ -12,43 +12,71 @@ import {
   setMenuList,
   setToken
 } from "@/utils/cookies";
-import permission from "./permission";
 
 interface userInfoType {
   username: string;
   password: string;
 }
 
-const state = {
-  token: getToken() || "666", // token
-  name: <string>"",
-  avatar: <string>"",
-  introduction: <string>"",
-  storeList: <any[]>[],
-  roles: <string[]>[],
-  emptyRole: false,
+interface stateType {
+  token: string;
+  name: string;
+  avatar: string;
+  introduction: string;
+  roles: string[];
+  emptyRole: Boolean;
+}
+
+const state: stateType = {
+  token: getToken() || "", // token
+  name: "", // 用户名
+  avatar: "", // 头像
+  introduction: "", // 简介
+  roles: [], // 身份权限
+  emptyRole: false, // 是否为空身份
 };
 
-const mutations = {
-  SET_TOKEN: (token: string) => {
+interface mutationsType {
+  SET_TOKEN: Function;
+  SET_EMPTY_ROLE: Function;
+  SET_ROLES: Function;
+}
+
+const mutations: mutationsType = {
+  // 设置 token
+  SET_TOKEN: (state: stateType, token: string) => {
     state.token = token;
   },
-  SET_EMPTY_ROLE(authorities: any) {
+
+  // 设置 是否为空身份
+  SET_EMPTY_ROLE(state: stateType, authorities: any) {
     if (authorities.length === 0) {
       state.emptyRole = true;
     }
   },
-  SET_ROLES(roles: string[]) {
+
+  // 设置 权限数组
+  SET_ROLES(state: stateType, roles: string[]) {
     state.roles = roles;
-  },
-  SET_STORE_LIST(data: any) {
-    state.storeList = data;
   },
 };
 
-const actions = {
+interface contextType {
+  // TODO 范围太广了，需要完善
+  commit: Function;
+  dispatch: Function;
+}
+
+interface actionsType {
+  Login: Function;
+  ResetToken: Function;
+  LogOut: Function;
+}
+
+const actions: actionsType = {
   // 登录
-  Login: async (context: any, userInfo: userInfoType) => {
+  Login: async (context: contextType, userInfo: userInfoType) => {
+    console.log(context);
     let { username, password } = userInfo;
     username = username.trim();
     const params = {
@@ -58,31 +86,32 @@ const actions = {
     const res: any = await loginAPI(params);
     setToken(res.token);
     setMenuList(res.list);
+
+    context.commit("SET_TOKEN", res.token);
   },
 
-  ResetToken() {
+  // 清除 token 菜单列表 空身份
+  ResetToken(context: contextType) {
     removeToken();
     removeMenuList();
     removeEmptyRole();
-    mutations.SET_TOKEN("");
-    mutations.SET_ROLES([]);
-    mutations.SET_EMPTY_ROLE("");
+
+    context.commit("SET_TOKEN", "");
+    context.commit("SET_ROLES", []);
+    context.commit("SET_EMPTY_ROLE", "");
   },
 
   // 登出
-  LogOut() {
-    if (state.token === "") {
-      throw Error("LogOut: token is undefined!");
-    }
+  LogOut(context: contextType) {
     removeToken();
     // resetRouter();
     removeMenuList();
     removeCurrentName();
 
-    mutations.SET_TOKEN("");
-    mutations.SET_ROLES([]);
+    context.commit("SET_TOKEN", "");
+    context.commit("SET_ROLES", []);
 
-    permission.actions.removeBuildFlag();
+    context.dispatch("permission/removeBuildFlag", { root: true });
   },
 };
 
