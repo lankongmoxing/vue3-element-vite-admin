@@ -119,8 +119,13 @@ export default defineComponent({
       if (basePathValue === '/') {
         path = basePathValue + routePath
       } else {
-        path = basePathValue + '/' + routePath
+        if (routePath) {
+          path = basePathValue + '/' + routePath
+        } else {
+          path = basePathValue
+        }
       }
+
       return path
     }
 

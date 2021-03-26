@@ -4,7 +4,7 @@
  * 2.异步路由：需要根据服务端返回的路由数据展示对应的菜单
  */
 
-import { getCurrentName, getMenuList } from "@/utils/cookies";
+import { getMenuList } from "@/utils/cookies";
 import { Mutation } from "vuex";
 import { asyncRoutes, constantRoutes } from "./../../router/index";
 
@@ -21,7 +21,7 @@ const state: stateType = {
   routes: constantRoutes, // 路由列表
   addRoutes: [], // 添加的动态路由
   defaultRoute: "",
-  dynamicRoutes: [],
+  dynamicRoutes: [], // 异步路由
   menuRoutes: getMenuList() || [],
   hasBuilded: <Boolean>false,
 };
@@ -66,50 +66,6 @@ const actions = {
     context.commit("SET_HAS_BUILDED", false);
   },
 
-  CurrentIsAuths(context: contextType, routers: any) {
-    const currentMenuName = getCurrentName();
-    let currentIsAuth = false;
-    let status = false;
-    if (currentMenuName) {
-      for (let i = 0; i < routers.length; i++) {
-        if (routers[i].name && routers[i].name === currentMenuName) {
-          currentIsAuth = true;
-          return currentIsAuth;
-        } else if (
-          !status &&
-          routers[i].children &&
-          (routers[i].children as any).length > 0
-        ) {
-          (routers[i].children as any).map((every: any) => {
-            if (
-              !status &&
-              every.name &&
-              every.name === currentMenuName &&
-              (!every.meta.hidden || every.meta.isDetail)
-            ) {
-              if (every.meta.isDetail) {
-                const isParentMenu = routers[i].children.find((e: any) => {
-                  return e.name === every.meta.parentTitle;
-                });
-                status = true;
-                currentIsAuth = isParentMenu
-                  ? !isParentMenu.meta.hidden
-                  : false;
-                return currentIsAuth;
-              } else {
-                currentIsAuth = true;
-                return currentIsAuth;
-              }
-            }
-          });
-        }
-      }
-      return currentIsAuth;
-    } else {
-      return currentIsAuth;
-    }
-  },
-
   GenerateRoutes(context: contextType, routes: any) {
     let accessedRoutes: any;
     let defaultRoute: any;
@@ -129,6 +85,7 @@ const actions = {
       context.commit("SET_DEFAULTROUTES", "");
     }
     accessedRoutes = filterAsyncRoutes(asyncRoutes, routes);
+
     context.commit("SET_ROUTES", accessedRoutes);
     context.commit("SET_HAS_BUILDED", true);
     return defaultRoute;
@@ -147,6 +104,7 @@ export const filterAsyncRoutes = (allRoutes: any[], routes: any) => {
   allRoutes.forEach((route) => {
     const r = { ...route };
     const permissionObj = hasPermission(routes, r);
+
     if (permissionObj) {
       if (r.children && permissionObj.subMenus) {
         r.children = filterAsyncRoutes(r.children, permissionObj.subMenus);

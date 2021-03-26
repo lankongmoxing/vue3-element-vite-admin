@@ -1,17 +1,10 @@
 <template>
-  <div :class="{'has-logo': showLogo}">
+  <div :class="{ 'has-logo': showLogo }">
     <!-- 顶部的 logo -->
-    <sidebar-logo
-      v-if="showLogo"
-      :collapse="isCollapse"
-    />
+    <sidebar-logo v-if="showLogo" :collapse="isCollapse" />
 
     <!-- 搜索菜单 -->
-    <SearchBar
-      v-if="!isCollapse"
-      id="header-search"
-      class="right-menu-item"
-    />
+    <SearchBar v-if="!isCollapse" id="header-search" class="right-menu-item" />
 
     <!-- 菜单列表，根据路由生成 -->
     <el-scrollbar wrap-class="scrollbar-wrapper">
@@ -102,9 +95,10 @@ export default defineComponent({
 .sidebar-container {
   // reset element-ui css
   padding-bottom: 64px !important;
-  box-shadow: 3px 3px 3px rgba(0,0,0,.2);
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
   .horizontal-collapse-transition {
-    transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;
+    transition: 0s width ease-in-out, 0s padding-left ease-in-out,
+      0s padding-right ease-in-out;
   }
 
   .scrollbar-wrapper {
@@ -112,7 +106,7 @@ export default defineComponent({
   }
 
   .el-scrollbar__view {
-    height: 100%
+    height: 100%;
   }
 
   .el-scrollbar__bar {
@@ -129,7 +123,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .el-scrollbar {
-  height: 100%
+  height: 100%;
 }
 
 .has-logo {

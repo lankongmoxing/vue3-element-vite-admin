@@ -54,10 +54,12 @@ const constantRoutes = [
       },
     ],
   },
-  handleRouter
 ];
 
-const asyncRoutes: any = []
+const asyncRoutes = [
+  handleRouter
+]
+
 export { constantRoutes, asyncRoutes };
 
 export default createRouter({

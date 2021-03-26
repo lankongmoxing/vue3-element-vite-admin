@@ -83,11 +83,11 @@ const actions: actionsType = {
       username,
       password,
     };
-    const res: any = await loginAPI(params);
-    setToken(res.token);
-    setMenuList(res.list);
+    const { data }: any = await loginAPI(params);
+    setToken(data.token);
+    setMenuList(data.list);
 
-    context.commit("SET_TOKEN", res.token);
+    context.commit("SET_TOKEN", data.token);
   },
 
   // 清除 token 菜单列表 空身份
@@ -111,7 +111,13 @@ const actions: actionsType = {
     context.commit("SET_TOKEN", "");
     context.commit("SET_ROLES", []);
 
-    context.dispatch("permission/removeBuildFlag", { root: true });
+    // 此处是一个 A actions 调用 B actions 的标准形式，
+    /**
+     * 1. 其他 actions的路径
+     * 2. 参数，如果不需要也要预留
+     * 3. { root: true }，表示调用其他actions
+     */
+    context.dispatch("permission/removeBuildFlag", "", { root: true });
   },
 };
 

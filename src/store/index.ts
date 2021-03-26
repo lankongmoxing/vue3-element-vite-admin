@@ -5,7 +5,8 @@ import settings from "./modules/settings";
 import tagsView from "./modules/tags-view";
 import user from "./modules/user";
 
-export default createStore({
+
+export default <any>createStore({
   modules: <any>{
     permission,
     settings,
