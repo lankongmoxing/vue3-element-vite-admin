@@ -17,7 +17,7 @@
         <navbar />
 
         <!-- 快捷标签 -->
-        <tags-view v-if="showTagsView" />
+        <!-- <tags-view v-if="showTagsView" /> -->
       </div>
 
       <!-- 页面内容 -->

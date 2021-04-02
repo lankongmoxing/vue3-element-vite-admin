@@ -4,7 +4,7 @@
     <sidebar-logo v-if="showLogo" :collapse="isCollapse" />
 
     <!-- 搜索菜单 -->
-    <SearchBar v-if="!isCollapse" id="header-search" class="right-menu-item" />
+    <!-- <SearchBar v-if="!isCollapse" id="header-search" class="right-menu-item" /> -->
 
     <!-- 菜单列表，根据路由生成 -->
     <el-scrollbar wrap-class="scrollbar-wrapper">
@@ -37,13 +37,11 @@ import { defineComponent, computed } from 'vue'
 import SidebarItem from './SidebarItem.vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import SearchBar from '@/components/HeaderSearch/index.vue'
 
 export default defineComponent({
   components: {
     SidebarLogo,
-    SidebarItem,
-    SearchBar
+    SidebarItem
   },
   setup() {
     const store = useStore()
